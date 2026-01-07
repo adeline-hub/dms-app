@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DMS</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 16px; }
+    h1 { margin-bottom: 6px; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 16px; margin: 16px 0; }
+    label { display:block; margin: 10px 0 4px; }
+    input, select { width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; }
+    button { margin-top: 12px; padding: 10px 14px; border:0; border-radius:8px; cursor:pointer; }
+    .primary { background:#2563eb; color:white; }
+    .muted { color:#666; font-size: 13px; }
+    pre { background:#111; color:#0f0; padding:12px; border-radius:10px; overflow:auto; }
+  </style>
+</head>
+<body>
+  <h1>DMS</h1>
+  <div class="muted">Create a project, upload documents, generate a deck.</div>
+
+  <div class="card">
+    <h2>1) Create Project</h2>
+    <label>Type</label>
+    <select id="type">
+      <option value="business">business</option>
+      <option value="fund">fund</option>
+    </select>
+
+    <label>Sector</label>
+    <input id="sector" placeholder="food" />
+
+    <label>Territory (country)</label>
+    <input id="territory" placeholder="chad" />
+
+    <button class="primary" onclick="createProject()">Create</button>
+    <div class="muted">Project ID will appear below and be used for upload.</div>
+  </div>
+
+  <div class="card">
+    <h2>2) Upload Files</h2>
+    <label>Project ID</label>
+    <input id="project_id" placeholder="business-food-chad" />
+
+    <label>Files (PDF, DOCX, XLSX)</label>
+    <input id="files" type="file" multiple />
+
+    <button class="primary" onclick="uploadFiles()">Upload + Run Pipeline</button>
+  </div>
+
+  <div class="card">
+    <h2>3) Download Financial Template</h2>
+    <a href="/templates/financial" target="_blank">Download Financial_Model_Template.xlsx</a>
+  </div>
+
+  <div class="card">
+    <h2>Output</h2>
+    <pre id="out">{}</pre>
+  </div>
+
+<script>
+  async function createProject() {
+    const payload = {
+      type: document.getElementById("type").value,
+      sector: document.getElementById("sector").value.trim(),
+      territory: document.getElementById("territory").value.trim()
+    };
+
+    const res = await fetch("/projects", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json().catch(() => ({}));
+    document.getElementById("out").textContent = JSON.stringify(data, null, 2);
+
+    if (data.project_id) {
+      document.getElementById("project_id").value = data.project_id;
+    }
+  }
+
+  async function uploadFiles() {
+    const projectId = document.getElementById("project_id").value.trim();
+    const input = document.getElementById("files");
+
+    if (!projectId) return alert("Project ID required");
+    if (!input.files.length) return alert("Choose at least one file");
+
+    const fd = new FormData();
+    for (const f of input.files) fd.append("files", f);
+
+    const res = await fetch(`/upload/${encodeURIComponent(projectId)}`, {
+      method: "POST",
+      body: fd
+    });
+
+    const data = await res.json().catch(() => ({}));
+    document.getElementById("out").textContent = JSON.stringify(data, null, 2);
+  }
+</script>
+</body>
+</html>
