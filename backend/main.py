@@ -7,15 +7,14 @@ from backend.api.projects import router as projects_router
 from backend.api.uploads import router as uploads_router
 from backend.api.templates import router as templates_router
 
-app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIR / "assets")), name="assets")
+app = FastAPI(title="DMS")  # ✅ app must be defined BEFORE app.mount
 
-app = FastAPI(title="DMS")
-
-ROOT = Path(__file__).resolve().parents[1]          # repo root (…/dms)
+ROOT = Path(__file__).resolve().parents[1]
 FRONTEND_DIR = ROOT / "frontend"
 INDEX_HTML = FRONTEND_DIR / "index.html"
 
-app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
+# serve /assets/logo.png
+app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIR / "assets")), name="assets")
 
 @app.get("/")
 def home():
