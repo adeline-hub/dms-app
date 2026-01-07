@@ -17,7 +17,14 @@
   </style>
 </head>
 <body>
-  <h1>DMS</h1>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+  <img src="/assets/logo.png" alt="Logo" style="height:48px;width:auto;" />
+  <div>
+    <h1 style="margin:0;">DMS</h1>
+    <div class="muted">Create a project, upload documents, generate a deck.</div>
+  </div>
+</div>
+  <h1>DOCUMENT MANAMGEMENT SYSTEM - BUILD YOUR DECK WITH YOUR DOCUMENTS</h1>
   <div class="muted">Create a project, upload documents, generate a deck.</div>
 
   <div class="card">
@@ -39,6 +46,17 @@
   </div>
 
   <div class="card">
+    <h2>1.1) Download Financial Template</h2>
+    <p>then upload it with your numbers</p>
+    <a href="/templates/financial" target="_blank">Download Financial_Model_Template.xlsx</a>
+  </div>
+
+  <div class="card">
+    <h2>Output</h2>
+    <pre id="out">{}</pre>
+  </div>
+  <div class="card">
+
     <h2>2) Upload Files</h2>
     <label>Project ID</label>
     <input id="project_id" placeholder="business-food-chad" />
@@ -49,15 +67,7 @@
     <button class="primary" onclick="uploadFiles()">Upload + Run Pipeline</button>
   </div>
 
-  <div class="card">
-    <h2>3) Download Financial Template</h2>
-    <a href="/templates/financial" target="_blank">Download Financial_Model_Template.xlsx</a>
-  </div>
 
-  <div class="card">
-    <h2>Output</h2>
-    <pre id="out">{}</pre>
-  </div>
 <div class="card">
   <h2>3) Download Deck</h2>
 

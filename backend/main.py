@@ -7,6 +7,8 @@ from backend.api.projects import router as projects_router
 from backend.api.uploads import router as uploads_router
 from backend.api.templates import router as templates_router
 
+app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIR / "assets")), name="assets")
+
 app = FastAPI(title="DMS")
 
 ROOT = Path(__file__).resolve().parents[1]          # repo root (…/dms)
